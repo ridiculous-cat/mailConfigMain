@@ -29,7 +29,7 @@ const UserLayout = props => {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>{title}</title>
+        <title>88888</title>
         <meta name="description" content={title} />
       </Helmet>
 
