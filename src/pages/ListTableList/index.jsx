@@ -98,7 +98,7 @@ const TableList = () => {
       // hideInSearch:true,
       valueType: 'textarea',
       render: (text, {name,desc}) => {
-      return <Link to= {{
+      return <Link  target="_blank" to= {{
       pathname: "/list/mail-detail",
       search: `?mailSubject=${desc}`,
       state: { id: name }}}>{desc}</Link>
