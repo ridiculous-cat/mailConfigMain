@@ -38,12 +38,12 @@ export default defineConfig({
     },
     {
       path: '/',
-      component: '../layouts/SecurityLayout',
+      // component: '../layouts/SecurityLayout',
       routes: [
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
+          // authority: ['admin', 'user'],
           routes: [
             {
               path: '/',
@@ -67,7 +67,7 @@ export default defineConfig({
                   name: 'sub-page',
                   icon: 'smile',
                   component: './Welcome',
-                  authority: ['admin'],
+                  // authority: ['admin'],
                 },
               ],
             },

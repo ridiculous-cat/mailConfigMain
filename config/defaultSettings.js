@@ -1,6 +1,6 @@
 const proSettings = {
   "navTheme": "dark",
-  "primaryColor": "#1890ff",
+  "primaryColor": "rgba(25, 158, 216, 1)",
   "layout": "side",
   "contentWidth": "Fluid",
   "fixedHeader": false,
@@ -17,3 +17,5 @@ const proSettings = {
   "menuHeaderRender": false
 }
 export default proSettings;
+
+

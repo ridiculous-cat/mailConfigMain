@@ -75,13 +75,25 @@ const getHeader=()=>  <Row>
 <Col span={11}>申购V2邮件组（ID：5）</Col>
 <Col span={10}>收件人总数：5</Col>
 </Row>
+
+const showBtnGroups=()=>{
+  const [state, setState] = useState('detail');
+  const BtnGroups=state ==='edit'?
+  <>
+  <Button style={{display:"inline",marginBottom:10,size:'12px'}} size='small' type="primary" >添加收件组</Button>
+  <Button style={{display:"inline",marginBottom:10,size:'12px'}} size='small' type="primary" >保存</Button>
+  <Button style={{display:"inline",marginBottom:10,size:'12px'}} size='small' type="primary" >取消</Button>
+  </>:
+  <Button style={{display:"inline",marginBottom:10,size:'12px'}} size='small' type="primary" >编辑</Button>
+  return BtnGroups
+}
 const Detail=()=>  
 <PageContainer>
   <Row>
 <Col span={4}>邮件主题：</Col>
-<Col span={10}>申购V2信息</Col>
-<Col span={8}>收件人总数：5</Col>
-<Col span={2}> <Button style={{display:"inline",marginBottom:10,size:'12px'}} size='small' type="primary">编辑</Button></Col>
+<Col span={7}>申购V2信息</Col>
+<Col span={7}>收件人总数：5</Col>
+<Col span={6}>{showBtnGroups() }</Col>
 </Row>
 <Collapse accordion  defaultActiveKey={['1']} onChange={callback}>
 <Panel header={ getHeader()} key="1" >
