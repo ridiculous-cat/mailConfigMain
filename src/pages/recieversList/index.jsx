@@ -101,8 +101,8 @@ const TableList = () => {
           <Link
             target="_blank"
             to={{
-              pathname: '/monitorMailList/mail-detail',
-              search: `?mailSubject=${desc}`,
+              pathname: '/recieversList/reciever-detail',
+              search: `?recieversName=${desc}`,
               state: { id: name },
             }}
           >
@@ -146,6 +146,7 @@ const TableList = () => {
       dataIndex: 'callNo',
       renderFormItem: (item, { defaultRender, value, ...rest }, form) => {
         const receiverGroupName = form.getFieldValue('receiverGroupName')
+
         value = []
         value.push(receiverGroupName)
         console.log(

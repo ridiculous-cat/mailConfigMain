@@ -74,12 +74,23 @@ export default defineConfig({
             {
               name: '列表页',
               icon: 'table',
-              path: '/list',
+              path: '/recieversList',
+              component: './recieversList', 
+            },
+            {
+              name: 'mail-detail',
+              path: './recieversList/reciever-detail',
+              component: './recieversList/recieverDetail',
+            },
+            {
+              name: '列表页',
+              icon: 'table',
+              path: '/monitorMailList',
               component: './ListTableList', 
             },
             {
               name: 'mail-detail',
-              path: './list/mail-detail',
+              path: './monitorMailList/mail-detail',
               component: './ListTableList/mailDetail',
             },
             {

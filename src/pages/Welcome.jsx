@@ -1,48 +1,47 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, Typography } from 'antd';
+import { Card, Alert,  Col, Row , } from 'antd';
+
 import styles from './Welcome.less';
-
-const CodePreview = ({ children }) => (
-  <pre className={styles.pre}>
-    <code>
-      <Typography.Text copyable>{children}</Typography.Text>
-    </code>
-  </pre>
-);
-
+import { Link } from 'umi';
+const { Meta } = Card;
+const getHeader=()=>  <Row>
+<Col span={3}>产品经理：</Col>
+<Col span={9}>高惠贤</Col>
+<Col span={3}>启动日期：</Col>
+<Col span={9}>2020/08/03</Col>
+</Row>
 export default () => (
   <PageContainer>
-    <Card>
       <Alert
-        message="更快更强的重型组件，已经发布。"
-        type="success"
-        showIcon
-        banner
-        style={{
-          margin: -12,
-          marginBottom: 24,
-        }}
-      />
-      <Typography.Text strong>
-        高级表格{' '}
-        <a href="https://protable.ant.design/" rel="noopener noreferrer" target="__blank">
-          欢迎使用
-        </a>
-      </Typography.Text>
-      <CodePreview>yarn add @ant-design/pro-table</CodePreview>
-      <Typography.Text
-        strong
-        style={{
-          marginBottom: 12,
-        }}
-      >
-        高级布局{' '}
-        <a href="https://prolayout.ant.design/" rel="noopener noreferrer" target="__blank">
-          欢迎使用
-        </a>
-      </Typography.Text>
-      <CodePreview>yarn add @ant-design/pro-layout</CodePreview>
-    </Card>
+      message="项目信息"
+      description={getHeader()}
+      type="info"
+      style={{marginBottom:20}}
+    />
+    <Row gutter={16}>
+      <Col span={12}>
+      <Link to={{
+            pathname: "/monitorMailList"
+          }}> <Card
+          title="监控邮件配置"
+          hoverable
+          bordered={false}>
+          <Meta title="杨亚辉" description="负责人" />
+        </Card></Link>
+       
+      </Col>
+      <Col span={12}>
+      <Link to={{
+            pathname: "/recieversList"
+          }}> <Card
+          title="监控邮件配置"
+          hoverable
+          bordered={false}>
+          <Meta title="祖清华" description="负责人" />
+        </Card></Link>
+      </Col>
+
+    </Row>
   </PageContainer>
 );
