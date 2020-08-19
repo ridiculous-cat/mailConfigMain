@@ -162,7 +162,12 @@ const Detail = () => {
         <Col span={7}>收件人总数：5</Col>
         <Col span={6}>{showBtnGroups()}</Col>
       </Row>
-      <Collapse accordion defaultActiveKey={['1']} onChange={callback}>
+      <Collapse
+        accordion
+        defaultActiveKey={['1']}
+        expandIconPosition="right"
+        onChange={callback}
+      >
         {showP1 && (
           <Panel header={getHeader()} key="1" extra={deletePanel('1')}>
             <Row>
