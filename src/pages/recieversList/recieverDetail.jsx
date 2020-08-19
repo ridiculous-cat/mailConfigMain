@@ -81,7 +81,17 @@ const getHeader = () => (
   <Row>
     <Col span={3}>收件组1：</Col>
     <Col span={11}>申购V2邮件组（ID：5）</Col>
-    <Col span={10}>收件人总数：5</Col>
+    <Col span={7}>收件人总数：5</Col>
+    <Col span={3}>
+      <Button
+        type="text"
+        style={{ position: 'absolute', right: -100, top: -7, zIndex: 10000 }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+        icon={<CloseCircleOutlined style={{ fontSize: 30 }} />}
+      />
+    </Col>
   </Row>
 )
 
@@ -133,52 +143,57 @@ const Detail = () => (
         {showBtnGroups()}
       </Col>
     </Row>
-    <Collapse
-      accordion
-      defaultActiveKey={['1']}
-      expandIconPosition="right"
-      onChange={callback}
-    >
-      <Panel header={getHeader()} key="1">
-        <Row align="middle">
-          <Col span={2}></Col>
-          <Col span={16}>
-            <Table columns={columns} dataSource={data} onChange={onChange} />
-          </Col>
-          <Col span={6} align="middle">
-            {/* <CloseCircleOutlined style={{ fontSize: 30 }} /> */}
-            <Tooltip title="删除">
-              <Button
-                type="text"
-                icon={<CloseCircleOutlined style={{ fontSize: 30 }} />}
-              />
-            </Tooltip>
-          </Col>
-        </Row>
-      </Panel>
-      <Panel header={getHeader()} key="2">
-        <Row align="middle">
-          <Col span={2}></Col>
-          <Col span={16}>
-            <Table columns={columns} dataSource={data} onChange={onChange} />
-          </Col>
-          <Col span={6} align="middle">
-            <CloseCircleOutlined style={{ fontSize: 30 }} />
-          </Col>
-        </Row>
-      </Panel>
-      <Panel header={getHeader()} key="3">
-        <Row align="middle">
-          <Col span={2}></Col>
-          <Col span={16}>
-            <Table columns={columns} dataSource={data} onChange={onChange} />
-          </Col>
-          <Col span={6} align="middle">
-            <CloseCircleOutlined style={{ fontSize: 30 }} />
-          </Col>
-        </Row>
-      </Panel>
-    </Collapse>
+    <Row>
+      <Col span={22}>
+        <Collapse
+          accordion
+          defaultActiveKey={['1']}
+          expandIconPosition="right"
+          onChange={callback}
+        >
+          <Panel header={getHeader()} key="1">
+            <Row align="middle">
+              <Col span={2}></Col>
+              <Col span={16}>
+                <Table
+                  columns={columns}
+                  dataSource={data}
+                  onChange={onChange}
+                />
+              </Col>
+              <Col span={6} align="middle"></Col>
+            </Row>
+          </Panel>
+          <Panel header={getHeader()} key="2">
+            <Row align="middle">
+              <Col span={2}></Col>
+              <Col span={16}>
+                <Table
+                  columns={columns}
+                  dataSource={data}
+                  onChange={onChange}
+                />
+              </Col>
+              <Col span={6} align="middle"></Col>
+            </Row>
+          </Panel>
+          <Panel header={getHeader()} key="3">
+            <Row align="middle">
+              <Col span={2}></Col>
+              <Col span={16}>
+                <Table
+                  columns={columns}
+                  dataSource={data}
+                  onChange={onChange}
+                />
+              </Col>
+              <Col span={6} align="middle"></Col>
+            </Row>
+          </Panel>
+        </Collapse>
+      </Col>
+      <Col span={2}></Col>
+    </Row>
   </PageContainer>
 )
 export default Detail

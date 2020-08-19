@@ -15,7 +15,7 @@ const columns = [
       return (
         <Link
           to={{
-            pathname: '/list/mail-detail',
+            pathname: '/recieversList/reciever-detail',
             search: `?sort=${name}`,
             state: { id: name },
           }}
