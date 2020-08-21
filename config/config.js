@@ -1,11 +1,12 @@
 // https://umijs.org/config/
-import { defineConfig } from 'umi';
-import defaultSettings from './defaultSettings';
-import proxy from './proxy';
+import { defineConfig } from 'umi'
+import defaultSettings from './defaultSettings'
+import proxy from './proxy'
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV } = process.env
 export default defineConfig({
   hash: true,
+  history: { type: 'hash' },
   antd: {},
   dva: {
     hmr: true,
@@ -75,7 +76,7 @@ export default defineConfig({
               name: '列表页',
               icon: 'table',
               path: '/recieversList',
-              component: './recieversList', 
+              component: './recieversList',
             },
             {
               name: 'mail-detail',
@@ -86,7 +87,7 @@ export default defineConfig({
               name: '列表页',
               icon: 'table',
               path: '/monitorMailList',
-              component: './ListTableList', 
+              component: './ListTableList',
             },
             {
               name: 'mail-detail',
@@ -116,7 +117,9 @@ export default defineConfig({
   title: false,
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
+  base: '/',
+  publicPath: './',
   manifest: {
     basePath: '/',
   },
-});
+})
