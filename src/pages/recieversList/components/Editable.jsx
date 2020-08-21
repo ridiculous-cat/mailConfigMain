@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import { Table, Input, Button, Popconfirm, Form } from 'antd'
+import ProTable from '@ant-design/pro-table'
+import SearchEmail from './SearchEmail'
 
 const EditableContext = React.createContext()
 
@@ -44,6 +46,7 @@ const EditableCell = ({
       const values = await form.validateFields()
       toggleEdit()
       handleSave({ ...record, ...values })
+      console.log('handleSave1', record, values)
     } catch (errInfo) {
       console.log('Save failed:', errInfo)
     }
@@ -66,6 +69,7 @@ const EditableCell = ({
         ]}
       >
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+        {/* <SearchEmail refTop={inputRef} saveFunc={save} /> */}
       </Form.Item>
     ) : (
       <div
@@ -88,29 +92,27 @@ export default class EditableTable extends React.Component {
     super(props)
     this.columns = [
       {
-        title: 'name',
+        title: '收件人姓名',
         dataIndex: 'name',
         width: '30%',
+      },
+      {
+        title: '收件邮箱',
+        hideInSearch: true,
         editable: true,
-      },
-      {
-        title: 'age',
-        dataIndex: 'age',
-      },
-      {
-        title: 'address',
         dataIndex: 'address',
       },
       {
-        title: 'operation',
+        title: '操作',
+        hideInSearch: true,
         dataIndex: 'operation',
         render: (text, record) =>
           this.state.dataSource.length >= 1 ? (
             <Popconfirm
-              title="Sure to delete?"
+              title="是否确认删除?"
               onConfirm={() => this.handleDelete(record.key)}
             >
-              <a>Delete</a>
+              <a>删除</a>
             </Popconfirm>
           ) : null,
       },
@@ -121,24 +123,17 @@ export default class EditableTable extends React.Component {
           key: '0',
           name: 'Edward King 0',
           age: '32',
-          address: 'London, Park Lane no. 0',
+          address: '请输入邮箱',
         },
         {
           key: '1',
           name: 'Edward King 1',
           age: '32',
-          address: 'London, Park Lane no. 1',
+          address: '请输入邮箱1',
         },
       ],
       count: 2,
     }
-  }
-
-  handleDelete = (key) => {
-    const dataSource = [...this.state.dataSource]
-    this.setState({
-      dataSource: dataSource.filter((item) => item.key !== key),
-    })
   }
 
   handleAdd = () => {
@@ -155,7 +150,15 @@ export default class EditableTable extends React.Component {
     })
   }
 
+  handleDelete = (key) => {
+    const dataSource = [...this.state.dataSource]
+    this.setState({
+      dataSource: dataSource.filter((item) => item.key !== key),
+    })
+  }
+
   handleSave = (row) => {
+    console.log(row, 'handleSave')
     const newData = [...this.state.dataSource]
     const index = newData.findIndex((item) => row.key === item.key)
     const item = newData[index]
@@ -198,14 +201,18 @@ export default class EditableTable extends React.Component {
             marginBottom: 16,
           }}
         >
-          Add a row
+          添加收件人
         </Button>
-        <Table
+        <ProTable
           components={components}
           rowClassName={() => 'editable-row'}
-          bordered
           dataSource={dataSource}
           columns={columns}
+          size="small"
+          bordered
+          options={false}
+          pagination={{ pageSizeOptions: [5, 10, 20], defaultPageSize: 5 }}
+          search={{ collapsed: false, collapseRender: () => false }}
         />
       </div>
     )

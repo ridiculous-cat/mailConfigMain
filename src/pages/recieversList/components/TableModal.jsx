@@ -7,7 +7,7 @@ const TableModal = (props) => {
     <Modal
       destroyOnClose
       title="添加收件组"
-      okText="确认选择"
+      okText="保存"
       visible={modalVisible}
       onCancel={() => onCancel()}
       width={900}

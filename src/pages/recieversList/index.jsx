@@ -15,8 +15,9 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout'
 import ProTable from '@ant-design/pro-table'
 import TableModal from './components/TableModal'
 import { queryRule, updateRule, addRule, removeRule } from './service'
+import Editable from './components/Editable'
 
-/**
+/**Editable
  * 添加节点
  * @param fields
  */
@@ -389,7 +390,7 @@ const TableList = () => {
           handleModalVisible(false)
         }}
       >
-        <ProTable
+        {/* <ProTable
           columns={columnsModal}
           scroll={{ x: '100%' }}
           rowClassName={() => 'editable-row'}
@@ -400,7 +401,8 @@ const TableList = () => {
           dataSource={data}
           // onChange={onChange}
           tableAlertRender={false}
-        />
+        /> */}
+        <Editable />
       </TableModal>
     </PageContainer>
   )
