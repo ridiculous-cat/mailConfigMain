@@ -179,7 +179,6 @@ const TableList = () => {
     {
       title: (_, type) => (type === 'table' ? '更新时间' : '收件人姓名'),
       dataIndex: 'updatedAt',
-      sorter: true,
       valueType: 'dateTime',
       renderFormItem: (item, { defaultRender, value, ...rest }, form) => {
         const receiver = form.getFieldValue('receiver')
@@ -251,11 +250,6 @@ const TableList = () => {
         headerTitle="监控邮件列表"
         actionRef={actionRef}
         rowKey="key"
-        toolBarRender={() => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 新建
-          </Button>,
-        ]}
         request={(params, sorter, filter) =>
           queryRule({ ...params, sorter, filter })
         }
@@ -269,49 +263,6 @@ const TableList = () => {
           collapseRender: () => false,
         }}
       />
-      <CreateForm
-        onCancel={() => handleModalVisible(false)}
-        modalVisible={createModalVisible}
-      >
-        <ProTable
-          onSubmit={async (value) => {
-            const success = await handleAdd(value)
-
-            if (success) {
-              handleModalVisible(false)
-
-              if (actionRef.current) {
-                actionRef.current.reload()
-              }
-            }
-          }}
-          rowKey="key"
-          type="form"
-          columns={columns}
-        />
-      </CreateForm>
-      {stepFormValues && Object.keys(stepFormValues).length ? (
-        <UpdateForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value)
-
-            if (success) {
-              handleUpdateModalVisible(false)
-              setStepFormValues({})
-
-              if (actionRef.current) {
-                actionRef.current.reload()
-              }
-            }
-          }}
-          onCancel={() => {
-            handleUpdateModalVisible(false)
-            setStepFormValues({})
-          }}
-          updateModalVisible={updateModalVisible}
-          values={stepFormValues}
-        />
-      ) : null}
     </PageContainer>
   )
 }

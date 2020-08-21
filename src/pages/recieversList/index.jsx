@@ -1,12 +1,21 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Divider, message, Input, Form, Row, Col } from 'antd'
+import {
+  Button,
+  Divider,
+  message,
+  Input,
+  Form,
+  Row,
+  Col,
+  Popconfirm,
+} from 'antd'
 import { Link } from 'umi'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout'
 import ProTable from '@ant-design/pro-table'
-import CreateForm from './components/CreateForm'
-import UpdateForm from './components/UpdateForm'
+import TableModal from './components/TableModal'
 import { queryRule, updateRule, addRule, removeRule } from './service'
+
 /**
  * 添加节点
  * @param fields
@@ -72,15 +81,92 @@ const handleRemove = async (selectedRows) => {
   }
 }
 
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    chinese: 98,
+    math: 60,
+    english: 70,
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    chinese: 98,
+    math: 66,
+    english: 89,
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    chinese: 98,
+    math: 90,
+    english: 70,
+  },
+  {
+    key: '4',
+    name: 'Jim Red',
+    chinese: 88,
+    math: 99,
+    english: 89,
+  },
+]
+const columnsModal = [
+  {
+    title: '收件组名',
+    dataIndex: 'name',
+    hideInTable: true,
+    width: 150,
+    render: (text, { name }) => {
+      return (
+        <Link
+          to={{
+            pathname: '/list/mail-detail',
+            search: `?sort=${name}`,
+            state: { id: name },
+          }}
+        >
+          {name}
+        </Link>
+      )
+    },
+  },
+  {
+    title: '收件人姓名',
+    hideInSearch: true,
+    dataIndex: 'chinese',
+  },
+  {
+    title: '收件邮箱',
+    hideInSearch: true,
+    dataIndex: 'math',
+  },
+  {
+    title: '操作',
+    dataIndex: 'option',
+    valueType: 'option',
+    width: 150,
+    render: () => (
+      <Popconfirm
+        title="是否确认删除?"
+        // onConfirm={confirm}
+        // onCancel={cancel}
+        okText="确认"
+        cancelText="取消"
+      >
+        <a href="">删除</a>
+      </Popconfirm>
+    ),
+  },
+]
+
 const TableList = () => {
-  const [createModalVisible, handleModalVisible] = useState(false)
-  const [updateModalVisible, handleUpdateModalVisible] = useState(false)
-  const [stepFormValues, setStepFormValues] = useState({})
+  const [modalVisible, handleModalVisible] = useState(false)
   const actionRef = useRef()
   const [selectedRowsState, setSelectedRows] = useState([])
   const columns = [
     {
-      title: '邮件ID',
+      title: '收件组ID',
       dataIndex: 'name',
       tip: '规则名称是唯一的 key',
       hideInSearch: true,
@@ -92,7 +178,7 @@ const TableList = () => {
       ],
     },
     {
-      title: '邮件主题',
+      title: '收件组名',
       dataIndex: 'desc',
       // hideInSearch:true,
       valueType: 'textarea',
@@ -142,7 +228,7 @@ const TableList = () => {
       },
     },
     {
-      title: '收件组名',
+      title: '收件人姓名',
       dataIndex: 'callNo',
       renderFormItem: (item, { defaultRender, value, ...rest }, form) => {
         const receiverGroupName = form.getFieldValue('receiverGroupName')
@@ -180,7 +266,6 @@ const TableList = () => {
     {
       title: (_, type) => (type === 'table' ? '更新时间' : '收件人姓名'),
       dataIndex: 'updatedAt',
-      sorter: true,
       valueType: 'dateTime',
       renderFormItem: (item, { defaultRender, value, ...rest }, form) => {
         const receiver = form.getFieldValue('receiver')
@@ -243,7 +328,31 @@ const TableList = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: () => <a href="">编辑</a>,
+      width: 150,
+      render: () => (
+        <>
+          <Link
+            target="_blank"
+            to={{
+              pathname: '/monitorMailList/mail-detail',
+              // search: `?recieversName=${}`,
+              state: { id: name },
+            }}
+          >
+            <a>编辑</a>
+          </Link>
+          <Divider type="vertical" />
+          <Popconfirm
+            title="是否确认删除?"
+            // onConfirm={confirm}
+            // onCancel={cancel}
+            okText="确认"
+            cancelText="取消"
+          >
+            <a href="">删除</a>
+          </Popconfirm>
+        </>
+      ),
     },
   ]
   return (
@@ -253,8 +362,12 @@ const TableList = () => {
         actionRef={actionRef}
         rowKey="key"
         toolBarRender={() => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
-            <PlusOutlined /> 新建
+          <Button
+            type="primary"
+            onClick={() => handleModalVisible(true)}
+            style={{ backgroundColor: '#00CC33', border: 'none' }}
+          >
+            <PlusOutlined /> 新建收件组
           </Button>,
         ]}
         request={(params, sorter, filter) =>
@@ -270,49 +383,25 @@ const TableList = () => {
           collapseRender: () => false,
         }}
       />
-      <CreateForm
-        onCancel={() => handleModalVisible(false)}
-        modalVisible={createModalVisible}
+      <TableModal
+        modalVisible={modalVisible}
+        onCancel={() => {
+          handleModalVisible(false)
+        }}
       >
         <ProTable
-          onSubmit={async (value) => {
-            const success = await handleAdd(value)
-
-            if (success) {
-              handleModalVisible(false)
-
-              if (actionRef.current) {
-                actionRef.current.reload()
-              }
-            }
-          }}
-          rowKey="key"
-          type="form"
-          columns={columns}
+          columns={columnsModal}
+          scroll={{ x: '100%' }}
+          rowClassName={() => 'editable-row'}
+          size="small"
+          bordered
+          options={false}
+          search={{ collapsed: false, collapseRender: () => false }}
+          dataSource={data}
+          // onChange={onChange}
+          tableAlertRender={false}
         />
-      </CreateForm>
-      {stepFormValues && Object.keys(stepFormValues).length ? (
-        <UpdateForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value)
-
-            if (success) {
-              handleUpdateModalVisible(false)
-              setStepFormValues({})
-
-              if (actionRef.current) {
-                actionRef.current.reload()
-              }
-            }
-          }}
-          onCancel={() => {
-            handleUpdateModalVisible(false)
-            setStepFormValues({})
-          }}
-          updateModalVisible={updateModalVisible}
-          values={stepFormValues}
-        />
-      ) : null}
+      </TableModal>
     </PageContainer>
   )
 }

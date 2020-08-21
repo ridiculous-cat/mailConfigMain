@@ -4,6 +4,8 @@ import { CloseCircleOutlined } from '@ant-design/icons'
 import ProTable from '@ant-design/pro-table'
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout'
 import { Link } from 'umi'
+import styles from './index.less'
+import TableModal from './components/TableModal'
 
 const { Panel } = Collapse
 
@@ -11,19 +13,6 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    render: (text, { name }) => {
-      return (
-        <Link
-          to={{
-            pathname: '/recieversList/reciever-detail',
-            search: `?sort=${name}`,
-            state: { id: name },
-          }}
-        >
-          {name}
-        </Link>
-      )
-    },
   },
   {
     title: 'Chinese Score',
@@ -36,6 +25,34 @@ const columns = [
   {
     title: 'English Score',
     dataIndex: 'english',
+  },
+]
+
+const columns1 = [
+  {
+    title: '收件组名',
+    dataIndex: 'name',
+    // render: (text, { name }) => {
+    //   return (
+    //     <Link
+    //       to={{
+    //         pathname: '/list/mail-detail',
+    //         search: `?sort=${name}`,
+    //         state: { id: name },
+    //       }}
+    //     >
+    //       {name}
+    //     </Link>
+    //   )
+    // },
+  },
+  {
+    title: '收件人姓名',
+    dataIndex: 'chinese',
+  },
+  {
+    title: '收件邮箱',
+    dataIndex: 'math',
   },
 ]
 
@@ -82,48 +99,57 @@ const text = `
 `
 const getHeader = () => (
   <Row>
-    <Col span={3}>收件组1：</Col>
-    <Col span={11}>申购V2邮件组（ID：5）</Col>
-    <Col span={10}>收件人总数：5</Col>
+    <Col span={6}>收件组1：</Col>
+    <Col span={6}>申购V2邮件组（ID：5）</Col>
+    <Col span={6}>收件人总数：5</Col>
+    <Col span={6}>
+      <Button
+        type="text"
+        style={{ position: 'absolute', right: -90, top: -7 }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+        icon={<CloseCircleOutlined style={{ fontSize: 30 }} />}
+      />
+    </Col>
   </Row>
 )
 
-const showBtnGroups = () => {
-  const [state, setState] = useState('detail')
-  const BtnGroups =
-    state === 'edit' ? (
-      <>
-        <Button
-          style={{ display: 'inline', marginBottom: 10, size: '12px' }}
-          size="small"
-          type="primary"
-        >
-          添加收件组
-        </Button>
-        <Button
-          style={{ display: 'inline', marginBottom: 10, size: '12px' }}
-          size="small"
-          type="primary"
-        >
-          保存
-        </Button>
-        <Button
-          style={{ display: 'inline', marginBottom: 10, size: '12px' }}
-          size="small"
-          type="primary"
-        >
-          取消
-        </Button>
-      </>
-    ) : (
+const showBtnGroups = (handleModalVisible) => {
+  const [editState, setEditState] = useState(false)
+
+  const BtnGroups = editState ? (
+    <>
       <Button
-        style={{ display: 'inline', marginBottom: 10, size: '12px' }}
-        size="small"
+        className={styles.changeBtn}
+        style={{ backgroundColor: '#00CC33', border: 'none' }}
         type="primary"
+        onClick={() => {
+          handleModalVisible(true)
+        }}
       >
-        编辑
+        添加收件组
       </Button>
-    )
+      <Button className={styles.changeBtn} type="primary">
+        保存
+      </Button>
+      <Button
+        className={styles.changeBtn}
+        style={{ marginRight: 0 }}
+        onClick={() => setEditState(false)}
+      >
+        取消
+      </Button>
+    </>
+  ) : (
+    <Button
+      style={{ marginBottom: 10 }}
+      type="primary"
+      onClick={() => setEditState(true)}
+    >
+      编辑
+    </Button>
+  )
   return BtnGroups
 }
 
@@ -131,6 +157,12 @@ const Detail = () => {
   const [showP1, cgShowP1] = useState(true)
   const [showP2, cgShowP2] = useState(true)
   const [showP3, cgShowP3] = useState(true)
+  const [modalVisible, handleModalVisible] = useState(false)
+  const paginationProps1 = {
+    pageSize: 5,
+    showSizeChanger: false,
+  }
+
   const deletePanel = (panKey) => {
     console.log('panKey', panKey)
     return (
@@ -156,20 +188,23 @@ const Detail = () => {
   }
   return (
     <PageContainer>
-      <Row>
-        <Col span={4}>邮件主题：</Col>
-        <Col span={7}>申购V2信息</Col>
-        <Col span={7}>收件人总数：5</Col>
-        <Col span={6}>{showBtnGroups()}</Col>
+      <Row style={{ width: '95%', padding: '12px 0 0 16px' }}>
+        <Col span={6}>邮件主题：</Col>
+        <Col span={6}>申购V2信息</Col>
+        <Col span={4}>收件人总数：5</Col>
+        <Col span={8} align="right">
+          {showBtnGroups(handleModalVisible)}
+        </Col>
       </Row>
       <Collapse
         accordion
         defaultActiveKey={['1']}
         expandIconPosition="right"
         onChange={callback}
+        className={styles.setWidth90}
       >
         {showP1 && (
-          <Panel header={getHeader()} key="1" extra={deletePanel('1')}>
+          <Panel header={getHeader()} key="1">
             <Row>
               <Col span={2} />
               <Col span={16}>
@@ -188,7 +223,7 @@ const Detail = () => {
           </Panel>
         )}
         {showP2 && (
-          <Panel header={getHeader()} key="2" extra={deletePanel('2')}>
+          <Panel header={getHeader()} key="2">
             <Row>
               <Col span={2} />
               <Col span={16}>
@@ -207,7 +242,7 @@ const Detail = () => {
           </Panel>
         )}
         {showP3 && (
-          <Panel header={getHeader()} key="3" extra={deletePanel('3')}>
+          <Panel header={getHeader()} key="3">
             <Row>
               <Col span={2} />
               <Col span={16}>
@@ -226,6 +261,30 @@ const Detail = () => {
           </Panel>
         )}
       </Collapse>
+      <TableModal
+        modalVisible={modalVisible}
+        onCancel={() => {
+          handleModalVisible(false)
+        }}
+      >
+        <ProTable
+          columns={columns1}
+          size="small"
+          bordered
+          options={false}
+          search={{
+            resetText: '',
+            collapsed: false,
+            collapseRender: () => false,
+          }}
+          dataSource={data}
+          onChange={onChange}
+          rowSelection={{}}
+          tableAlertRender={false}
+          pagination={paginationProps1}
+        />
+        <span className={styles.pageSizeText}>每页显示5条</span>
+      </TableModal>
     </PageContainer>
   )
 }

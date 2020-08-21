@@ -1,12 +1,28 @@
 import React, { useState, useRef } from 'react'
-import { Collapse, Row, Col, Table, Button, Space, Tooltip } from 'antd'
-import { PageContainer, FooterToolbar } from '@ant-design/pro-layout'
+import {
+  Collapse,
+  Row,
+  Col,
+  Table,
+  Button,
+  Space,
+  Tooltip,
+  PageHeader,
+} from 'antd'
+import {
+  PageContainer,
+  FooterToolbar,
+  PageHeaderWrapper,
+} from '@ant-design/pro-layout'
+import ProTable from '@ant-design/pro-table'
 import { CloseCircleOutlined } from '@ant-design/icons'
-const { Panel } = Collapse
 import { Link } from 'umi'
+import TableModal from './components/TableModal'
+
+const { Panel } = Collapse
 const columns = [
   {
-    title: 'Name',
+    title: '收件组名',
     dataIndex: 'name',
     render: (text, { name }) => {
       return (
@@ -23,16 +39,12 @@ const columns = [
     },
   },
   {
-    title: 'Chinese Score',
+    title: '收件人姓名',
     dataIndex: 'chinese',
   },
   {
-    title: 'Math Score',
+    title: '收件邮箱',
     dataIndex: 'math',
-  },
-  {
-    title: 'English Score',
-    dataIndex: 'english',
   },
 ]
 
@@ -74,6 +86,10 @@ function onChange(pagination, filters, sorter, extra) {
   console.log('params', pagination, filters, sorter, extra)
 }
 
+const addReciveList = () => {}
+
+const onCancel = () => {}
+
 const text = `
   it can be found as a welcome guest in many households across the world.
 `
@@ -85,7 +101,7 @@ const getHeader = () => (
     <Col span={3}>
       <Button
         type="text"
-        style={{ position: 'absolute', right: -100, top: -7, zIndex: 10000 }}
+        style={{ position: 'absolute', right: -90, top: -7, zIndex: 10000 }}
         onClick={(e) => {
           e.stopPropagation()
         }}
@@ -102,7 +118,6 @@ const showBtnGroups = () => {
       <>
         <Button
           style={{ display: 'inline', marginBottom: 10, size: '12px' }}
-          size="small"
           type="primary"
         >
           添加收件组
@@ -125,75 +140,39 @@ const showBtnGroups = () => {
     ) : (
       <Button
         style={{ display: 'inline', marginBottom: 10, size: '12px' }}
-        size="small"
         type="primary"
+        onClick={() => {
+          handleModalVisible(true)
+        }}
       >
         添加收件组
       </Button>
     )
   return BtnGroups
 }
-const Detail = () => (
-  <PageContainer>
-    <Row>
-      <Col span={4}>邮件主题：</Col>
-      <Col span={7}>申购V2信息</Col>
-      <Col span={7}>收件人总数：5</Col>
-      <Col span={6} align="right">
-        {showBtnGroups()}
-      </Col>
-    </Row>
-    <Row>
-      <Col span={22}>
-        <Collapse
-          accordion
-          defaultActiveKey={['1']}
-          expandIconPosition="right"
-          onChange={callback}
-        >
-          <Panel header={getHeader()} key="1">
-            <Row align="middle">
-              <Col span={2}></Col>
-              <Col span={16}>
-                <Table
-                  columns={columns}
-                  dataSource={data}
-                  onChange={onChange}
-                />
-              </Col>
-              <Col span={6} align="middle"></Col>
-            </Row>
-          </Panel>
-          <Panel header={getHeader()} key="2">
-            <Row align="middle">
-              <Col span={2}></Col>
-              <Col span={16}>
-                <Table
-                  columns={columns}
-                  dataSource={data}
-                  onChange={onChange}
-                />
-              </Col>
-              <Col span={6} align="middle"></Col>
-            </Row>
-          </Panel>
-          <Panel header={getHeader()} key="3">
-            <Row align="middle">
-              <Col span={2}></Col>
-              <Col span={16}>
-                <Table
-                  columns={columns}
-                  dataSource={data}
-                  onChange={onChange}
-                />
-              </Col>
-              <Col span={6} align="middle"></Col>
-            </Row>
-          </Panel>
-        </Collapse>
-      </Col>
-      <Col span={2}></Col>
-    </Row>
-  </PageContainer>
-)
+const Detail = () => {
+  const [modalVisible, handleModalVisible] = useState(false)
+  return (
+    <PageHeaderWrapper>
+      <TableModal
+        modalVisible={/* modalVisible */ true}
+        onCancel={() => {
+          handleModalVisible(false)
+        }}
+      >
+        <ProTable
+          columns={columns}
+          size="small"
+          bordered
+          options={false}
+          search={{ collapsed: false, collapseRender: () => false }}
+          dataSource={data}
+          onChange={onChange}
+          rowSelection={{}}
+          tableAlertRender={false}
+        />
+      </TableModal>
+    </PageHeaderWrapper>
+  )
+}
 export default Detail
